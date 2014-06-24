@@ -13,6 +13,8 @@ var express = require('express'),
     index  = require('./routes/index'),
     cpuCount = require('os').cpus().length; // Count the machine's CPUs
 
+var serverInerface - require('server-interface');
+
 
 var useCluster = process.env.USE_CLUSTER;
 
@@ -55,18 +57,20 @@ if (useCluster && cluster.isMaster) {
     app.get('/api/top/:type/:count', function(req,res){
         var type = req.param('type');
         var count = req.param('count');
-
+        serverInterface.getTop( type, count, {});
     });
 
     app.post('/api/top/:type/:count', function(req,res){
         var filter = req.body.param('filter');
         var type = req.param('type');
         var count = req.param('count');
+        serverInterface.getTop( type, count, filter);
 
     });
 
     app.post('api/entries', function(req,res){
         var entries = req.body.entries;
+        serverInterface.getEntities( entries);
     });
     // -----------------------------------
 
