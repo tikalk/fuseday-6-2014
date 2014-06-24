@@ -46,8 +46,29 @@ if (useCluster && cluster.isMaster) {
 
 
 
+    //
+
     app.get('/', index.home);
 
+    // API section
+
+    app.get('/api/top/:type/:count', function(req,res){
+        var type = req.param('type');
+        var count = req.param('count');
+
+    });
+
+    app.post('/api/top/:type/:count', function(req,res){
+        var filter = req.body.param('filter');
+        var type = req.param('type');
+        var count = req.param('count');
+
+    });
+
+    app.post('api/entries', function(req,res){
+        var entries = req.body.entries;
+    });
+    // -----------------------------------
 
 
     http.createServer(app).listen(app.get('port'), function () {
