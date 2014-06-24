@@ -11,27 +11,11 @@ var express = require('express'),
     cluster = require('cluster'),
     morgan  = require('morgan'),
     index  = require('./routes/index'),
+    q = require('q'),
     cpuCount = require('os').cpus().length; // Count the machine's CPUs
 
-var serverInerface - require('server-interface');
+var serverInterface = require('server-interface');
 
-
-var useCluster = process.env.USE_CLUSTER;
-
-if (useCluster && cluster.isMaster) {
-
-    // Create a worker for each CPU
-    for (var i = 0; i < cpuCount; i += 1) {
-        cluster.fork();
-    }
-
-    cluster.on('death', function (worker) {
-        console.log('Worker ' + worker.pid + ' died.');
-        logger.info('Worker ' + worker.pid + ' died.');
-    });
-
-// Code to run if we're in a worker process
-} else {
     var app = express();
 
     app.set('port', process.env.PORT || 5000);
@@ -57,20 +41,35 @@ if (useCluster && cluster.isMaster) {
     app.get('/api/top/:type/:count', function(req,res){
         var type = req.param('type');
         var count = req.param('count');
-        serverInterface.getTop( type, count, {});
+        serverInterface.getTop( type, count, {}).then(function(results) {
+            res.send(results);
+        }, function(error) {
+            console.error(error);
+            res.status(500);
+        });
     });
 
     app.post('/api/top/:type/:count', function(req,res){
         var filter = req.body.param('filter');
         var type = req.param('type');
         var count = req.param('count');
-        serverInterface.getTop( type, count, filter);
+        serverInterface.getTop( type, count, filter).then(function(results) {
+            res.send(results);
+        }, function(error) {
+            console.error(error);
+            res.status(500);
+        });;
 
     });
 
     app.post('api/entries', function(req,res){
-        var entries = req.body.entries;
-        serverInterface.getEntities( entries);
+        var entryIds = req.body.entries;
+        serverInterface.getEntries( entryIds).then(function(results) {
+            res.send(results);
+        }, function(error) {
+            console.error(error);
+            res.status(500);
+        });
     });
     // -----------------------------------
 
@@ -80,4 +79,3 @@ if (useCluster && cluster.isMaster) {
     });
 
 
-}
