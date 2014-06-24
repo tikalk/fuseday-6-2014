@@ -38,6 +38,8 @@ var serverInterface = {
 
         return deferred.promise;
     }
+};
 
 
-}
+
+exports.serverInterface = serverInterface;
