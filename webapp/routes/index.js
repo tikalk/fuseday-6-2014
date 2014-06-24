@@ -13,7 +13,17 @@ var redisConf = {
 
 var dataService = new DataService(redisConf);
 
-exports.home = function(req, res, next){
+exports.topTen = function(req, res, next){
     res.send('Hello Fuseday');
+}
 
+exports.getTopHashtags = function(req, res, next){
+    var time = req.query.time;
+    var limit = 10;
+    dataService.getTopHashtags(time, limit, function(err, tags){
+       if(err){
+           return next(err);
+       }
+        res.send(tags);
+    });
 }

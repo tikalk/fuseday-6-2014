@@ -50,6 +50,7 @@ if (useCluster && cluster.isMaster) {
 
     //app.get('/', index.home);
 
+    app.get('/hashtags', index.getTopHashtags);
 
 
     http.createServer(app).listen(app.get('port'), function () {
