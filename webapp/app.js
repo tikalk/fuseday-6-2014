@@ -51,6 +51,42 @@ if (useCluster && cluster.isMaster) {
     app.get('/hashtags', index.getTopHashtags);
 
 
+
+    app.post('/api/top/:type/:count', function (req, res) {
+        var filter = req.body.param('filter') || {};
+        var type = req.param('type');
+        var count = req.param('count');
+//        serverInterface.getTop(type, count, filter).then(function (results) {
+//            res.send(results);
+//        }, function (error) {
+//            console.error(error);
+//            res.status(500);
+//        });
+        items: [
+            { id: "saasdasd", name: "name", score: 10},
+            { id: "saasdasd1", name: "name1", score: 10},
+            { id: "saasdasd2", name: "name2", score: 9},
+            { id: "saasdasd3", name: "name3", score: 8},
+            { id: "saasdasd4", name: "name4", score: 6},
+            { id: "saasdasd5", name: "name5", score: 5},
+            { id: "saasdasd6", name: "name6", score: 6},
+            { id: "saasdasd7", name: "name7", score: 10},
+            { id: "saasdasd8", name: "name8", score: 10}
+
+        ];
+        res.send(items);
+    });
+
+    app.post('api/entries', function (req, res) {
+        var entryIds = req.body.entries;
+//        serverInterface.getEntries(entryIds).then(function (results) {
+//            res.send(results);
+//        }, function (error) {
+//            console.error(error);
+//            res.status(500);
+//        });
+    });
+
     http.createServer(app).listen(app.get('port'), function () {
         logger.info("Express server listening on port " + app.get('port'));
     });
