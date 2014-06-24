@@ -25,14 +25,21 @@
 
         <style>
 
-            #chart svg {
+            #chart1 svg, #chart2 svg {
                 height: 400px;
+                width: 800px;
             }
 
         </style>
 
 
         <script type="text/javascript">
+
+            var url = '/api/top/';
+
+       //     $.get('')
+
+
             nv.addGraph(function() {
                 var chart = nv.models.multiBarChart();
 
@@ -42,8 +49,8 @@
                 chart.yAxis
                         .tickFormat(d3.format(',.1f'));
 
-                d3.select('#chart svg')
-                        .datum(data())
+                d3.select('#chart1 svg')
+                        .datum(data1())
                         .transition().duration(500)
                         .call(chart)
                 ;
@@ -53,7 +60,8 @@
                 return chart;
             });
 
-function data() {
+
+function data1() {
     return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
         return {
             key: 'Stream' + i,
@@ -95,6 +103,61 @@ function data() {
             function stream_index(d, i) {
                 return {x: i, y: Math.max(0, d)};
             }
+
+
+            /*****?
+             *
+             */
+            nv.addGraph(function() {
+                var chart = nv.models.lineChart()
+                                .useInteractiveGuideline(true)
+                        ;
+
+                chart.xAxis
+                        .axisLabel('Time (ms)')
+                        .tickFormat(d3.format(',r'))
+                ;
+
+                chart.yAxis
+                        .axisLabel('Voltage (v)')
+                        .tickFormat(d3.format('.02f'))
+                ;
+
+                d3.select('#chart2 svg')
+                        .datum(data2())
+                        .transition().duration(500)
+                        .call(chart)
+                ;
+
+                nv.utils.windowResize(chart.update);
+
+                return chart;
+            });
+
+
+            function data2() {
+                var sin = [],
+                        cos = [];
+
+                for (var i = 0; i < 100; i++) {
+                    sin.push({x: i, y: Math.sin(i/10)});
+                    cos.push({x: i, y: .5 * Math.cos(i/10)});
+                }
+
+                return [
+                    {
+                        values: sin,
+                        key: 'Sine Wave',
+                        color: '#ff7f0e'
+                    },
+                    {
+                        values: cos,
+                        key: 'Cosine Wave',
+                        color: '#2ca02c'
+                    }
+                ];
+            }
+
         </script>
 
 
@@ -121,14 +184,16 @@ function data() {
             </div>
 
             <div class="row marketing">
-                <div class="col-lg-6">
 
                     this is where the graph goes ....
-                    <div id="chart">
+                    <div id="chart1">
+                        <svg></svg>
+                    </div>
+                    <div id="chart2">
                         <svg></svg>
                     </div>
 
-                </div>
+
             </div>
 
             <div class="footer">
