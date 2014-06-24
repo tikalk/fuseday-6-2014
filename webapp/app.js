@@ -11,6 +11,7 @@ var express = require('express'),
     cluster = require('cluster'),
     morgan  = require('morgan'),
     index  = require('./routes/index'),
+    path = require('path'),
     cpuCount = require('os').cpus().length; // Count the machine's CPUs
 
 
@@ -43,10 +44,11 @@ if (useCluster && cluster.isMaster) {
         logger.error(err.stack);
         res.send(500, 'Something broke!');
     });
+    app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
 
 
-    app.get('/', index.home);
+    //app.get('/', index.home);
 
 
 
